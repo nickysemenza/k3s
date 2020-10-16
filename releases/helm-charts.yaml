@@ -1,0 +1,81 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: kremers
+  namespace: flux
+spec:
+  interval: 1m
+  url: https://kremers.github.io/
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: k8s-at-home
+  namespace: flux
+spec:
+  interval: 1m
+  url: https://k8s-at-home.com/charts/
+
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: traefik
+  namespace: flux
+spec:
+  interval: 1m
+  url: https://helm.traefik.io/traefik
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: prometheus
+  namespace: flux
+spec:
+  interval: 1m
+  url: https://prometheus-community.github.io/helm-charts
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: halkeye
+  namespace: flux
+spec:
+  interval: 1m
+  url: https://halkeye.github.io/helm-charts
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: stable-deprecated
+  namespace: flux
+spec:
+  interval: 1m
+  url: https://kubernetes-charts.storage.googleapis.com/
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: kubernetes-dashboard
+  namespace: flux
+spec:
+  interval: 1m
+  url: https://kubernetes.github.io/dashboard/
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: kured
+  namespace: flux
+spec:
+  interval: 1m
+  url: https://weaveworks.github.io/kured
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: bananaspliff
+  namespace: flux
+spec:
+  interval: 1m
+  url: https://bananaspliff.github.io/geek-charts

@@ -1,0 +1,106 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: kured
+  namespace: system
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: kured
+      version: "2.2.x"
+      sourceRef:
+        kind: HelmRepository
+        name: kured
+        namespace: flux
+      interval: 1m
+  values:
+    service:
+      create: true
+    image:
+      repository: raspbernetes/kured
+    configuration:
+      period: "1h"
+    tolerations:
+      - key: "arm"
+        operator: "Exists"
+  valuesFrom:
+    - kind: Secret
+      name: kured-slack-webhook
+
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: kubernetes-dashboard
+  namespace: system
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: kubernetes-dashboard
+      version: "2.8.x"
+      sourceRef:
+        kind: HelmRepository
+        name: kubernetes-dashboard
+        namespace: flux
+      interval: 1m
+  values:
+    ingress:
+      enabled: true
+      annotations:
+        traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
+      hosts:
+        - dashboard.k8s.nickysemenza.com
+    # protocolHttp: true
+    extraArgs:
+      - --enable-skip-login
+      - --disable-settings-authorizer
+      - --enable-insecure-login
+    metricsScraper:
+      enabled: true
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: system-kubernetes-dashboard # k get serviceaccount | grep dash
+  # kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=system:kubernetes-dashboard
+  namespace: system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: system-kubernetes-dashboard
+    namespace: system
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: node-feature-discovery
+  namespace: system
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: node-feature-discovery
+      version: "2.0.x"
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: flux
+      interval: 1m
+  values:      
+    config: |
+      sources:
+        usb:
+          deviceClassWhitelist:
+            - "02"
+            - "0e"
+            - "ef"
+            - "fe"
+          deviceLabelFields:
+            - "class"
+            - "vendor"
+            - "device"

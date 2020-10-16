@@ -1,0 +1,38 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: nfs-client-provisioner-cantaloupe-ops
+  namespace: system
+  annotations:
+    fluxcd.io/ignore: "false"
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: nfs-client-provisioner-cantaloupe-ops
+  interval: 5m
+  chart:
+    spec:
+      chart: nfs-client-provisioner
+      version: "1.2.8"
+      sourceRef:
+        kind: HelmRepository
+        name: stable-deprecated
+        namespace: flux
+      interval: 1m
+  values:
+    image:
+      repository: quay.io/external_storage/nfs-client-provisioner
+      tag: v3.1.0-k8s1.11
+    nfs:
+      path: /volume3/k3s-ops
+      server: cantaloupe.lan.nickysemenza.com
+      mountOptions:
+        - tcp
+        - intr
+        - hard
+        - noatime
+        - nodiratime
+        - rsize=32768
+        - wsize=32768
+    storageClass:
+      # defaultClass: true
+      name: "nfs-client-cantaloupe-ops"

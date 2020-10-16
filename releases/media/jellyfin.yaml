@@ -1,13 +1,19 @@
-apiVersion: helm.fluxcd.io/v1
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: jellyfin
   namespace: media
 spec:
+  interval: 5m
   chart:
-    repository: https://k8s-at-home.com/charts/
-    name: jellyfin
-    version: 2.0.1
+    spec:
+      chart: jellyfin
+      version: "2.0.x"
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: flux
+      interval: 1m
   values:
     timezone: America/Los_Angeles
     ingress:
@@ -21,22 +27,22 @@ spec:
     persistence:
       config:
         enabled: true
-        storageClass: "nfs-client-ops"
+        storageClass: "nfs-client-cantaloupe-ops"
         accessMode: ReadWriteOnce
         size: 1Gi
         skipuninstall: false
       tvshows:
         enabled: false
-        existingClaim: nfs-media
+        existingClaim: nfs-media-cantaloupe
         accessMode: ReadWriteMany
         subPath: tv
       movies:
         enabled: false
-        existingClaim: nfs-media
+        existingClaim: nfs-media-cantaloupe
         accessMode: ReadWriteMany
         subPath: movies
       extraExistingClaimMounts:
-        - name: nfs-media-mount
+        - name: nfs-media-cantaloupe-mount
           mountPath: /srv/external-mount
-          existingClaim: nfs-media
+          existingClaim: nfs-media-cantaloupe
           accessMode: ReadWriteMany

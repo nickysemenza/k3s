@@ -1,13 +1,13 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: jackett
+  name: tautulli
   namespace: media
 spec:
   interval: 5m
   chart:
     spec:
-      chart: jackett
+      chart: tautulli
       version: "4.0.x"
       sourceRef:
         kind: HelmRepository
@@ -15,7 +15,7 @@ spec:
         namespace: flux
       interval: 1m
   values:
-    jackett:
+    tautulli:
       env:
         TZ: America/Los_Angeles
       ingress:
@@ -23,8 +23,10 @@ spec:
         annotations:
           traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
         hosts:
-          - host: jackett.k8s.nickysemenza.com
-            paths: ["/"]
+          - host: tautulli.k8s.nickysemenza.com
+            paths:
+              - path: /
+                pathType: Prefix
       persistence:
         config:
           enabled: true
@@ -33,8 +35,8 @@ spec:
           size: 1Gi
           ## Do not delete the pvc upon helm uninstall
           skipuninstall: false
-        media:
-          enabled: true
-          existingClaim: nfs-media-cantaloupe
-          ## Do not delete the pvc upon helm uninstall
-          skipuninstall: false
+        # media:
+        #   enabled: true
+        #   existingClaim: nfs-media-cantaloupe
+        #   ## Do not delete the pvc upon helm uninstall
+        #   skipuninstall: false

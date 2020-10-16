@@ -1,19 +1,22 @@
-apiVersion: helm.fluxcd.io/v1
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: vmware
   namespace: exporters
 spec:
+  interval: 5m
   chart:
-    repository: https://kremers.github.io/
-    name: vmware-exporter
-    version: 2.0.0
+    spec:
+      chart: vmware-exporter
+      version: "2.0.x"
+      sourceRef:
+        kind: HelmRepository
+        name: kremers
+        namespace: flux
+      interval: 1m
   valuesFrom:
-    - secretKeyRef:
-        name: vmware-creds
-        namespace: exporters
-        key: values.yaml
-        optional: false
+    - kind: Secret
+      name: vmware-creds
   values:
     image:
       tag: latest
@@ -23,7 +26,7 @@ spec:
     service:
       enabled: true
     nodeSelector:
-      location: cloud
+      location: home
     ingress:
       enabled: true
       annotations:

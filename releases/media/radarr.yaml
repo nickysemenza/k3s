@@ -1,21 +1,21 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: jackett
+  name: radarr
   namespace: media
 spec:
   interval: 5m
   chart:
     spec:
-      chart: jackett
-      version: "4.0.x"
+      chart: radarr
+      version: "6.0.x"
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
         namespace: flux
       interval: 1m
   values:
-    jackett:
+    radarr:
       env:
         TZ: America/Los_Angeles
       ingress:
@@ -23,8 +23,10 @@ spec:
         annotations:
           traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
         hosts:
-          - host: jackett.k8s.nickysemenza.com
-            paths: ["/"]
+          - host: radarr.k8s.nickysemenza.com
+            paths:
+              - path: /
+                pathType: Prefix
       persistence:
         config:
           enabled: true

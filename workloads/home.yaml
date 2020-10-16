@@ -1,28 +1,40 @@
-apiVersion: helm.fluxcd.io/v1
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: mosquitto
   namespace: home
 spec:
-  releaseName: mosquitto
+  interval: 5m
   chart:
-    repository: https://k8s-at-home.com/charts/
-    name: mosquitto
-    version: 0.3.3
+    spec:
+      chart: mosquitto
+      version: "0.3.x"
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: flux
+      interval: 1m
+  releaseName: mosquitto
   values:
     nodeSelector:
       location: home
 ---
-apiVersion: helm.fluxcd.io/v1
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: hass
   namespace: home
 spec:
+  interval: 5m
   chart:
-    repository: https://k8s-at-home.com/charts/
-    name: home-assistant
-    version: 2.5.1
+    spec:
+      chart: home-assistant
+      version: "2.5.x"
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: flux
+      interval: 1m
   values:
     ingress:
       enabled: true
@@ -33,7 +45,7 @@ spec:
 
     persistence:
       enabled: true
-      storageClass: "nfs-client-ops"
+      storageClass: "nfs-client-cantaloupe-ops"
 
     configurator:
       enabled: true
@@ -63,18 +75,24 @@ spec:
           - hass-vscode.k8s.nickysemenza.com
 
     nodeSelector:
-      location: cloud
+      location: home
 ---
-apiVersion: helm.fluxcd.io/v1
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: node-red
   namespace: home
 spec:
+  interval: 5m
   chart:
-    repository: https://k8s-at-home.com/charts/
-    name: node-red
-    version: 3.1.0
+    spec:
+      chart: node-red
+      version: "3.x.x"
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: flux
+      interval: 1m
   values:
     nodeSelector:
       location: home
@@ -86,18 +104,24 @@ spec:
         - node-red.k8s.nickysemenza.com
     persistence:
       enabled: true
-      storageClass: "nfs-client-ops"
+      storageClass: "nfs-client-cantaloupe-ops"
 ---
-apiVersion: helm.fluxcd.io/v1
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: zigbee2mqtt
   namespace: home
 spec:
+  interval: 5m
   chart:
-    repository: https://k8s-at-home.com/charts/
-    name: zigbee2mqtt
-    version: 2.0.1
+    spec:
+      chart: zigbee2mqtt
+      version: "2.0.x"
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: flux
+      interval: 1m
   values:
     timezone: America/Los_Angeles
     config:
@@ -108,7 +132,7 @@ spec:
         base_topic: zigbee2mqtt
         server: "mqtt://mosquitto.home.svc.cluster.local"
       serial:
-        port: /dev/ttyACM0
+        port: /dev/serial/by-id/usb-Texas_Instruments_TI_CC2531_USB_CDC___0X00124B0014D90913-if00
       # Both of these need to be enabled for the webui
       frontend:
         port: 8080
@@ -126,11 +150,11 @@ spec:
 
     persistence:
       enabled: true
-      storageClass: "nfs-client-ops"
+      storageClass: "nfs-client-cantaloupe-ops"
       size: 100Mi
 
     nodeSelector:
-      kubernetes.io/hostname: apricot
+      kubernetes.io/hostname: plum
     tolerations:
       - key: "arm"
         operator: "Exists"

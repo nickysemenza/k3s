@@ -1,0 +1,26 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: nzbhydra2
+  namespace: media
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: nzbhydra2
+      version: "3.0.x"
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: flux
+      interval: 1m
+  values:
+    ingress:
+      enabled: true
+      annotations:
+        traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
+      hosts:
+        - nzb.k8s.nickysemenza.com
+    persistence:
+      config:
+        storageClass: "nfs-client-cantaloupe-ops"

@@ -1,0 +1,50 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: speedtest-prometheus
+  namespace: exporters
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: speedtest-prometheus
+      version: "2.0.x"
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: flux
+      interval: 1m
+  values:
+    serviceMonitor:
+      enabled: true
+      interval: "60m"
+    replicaCount: 1
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: unifi-poller
+  namespace: exporters
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: unifi-poller
+      version: "2.0.x"
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: flux
+      interval: 1m
+  values:
+    image:
+      tag: stable
+    config:
+      influxdb:
+        disable: true
+      unifi:
+        defaults:
+          save_dpi: true
+  valuesFrom:
+    - kind: Secret
+      name: unifi-poller-creds

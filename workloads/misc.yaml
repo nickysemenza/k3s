@@ -1,0 +1,61 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: whoami
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: whoami
+      version: "0.3.2"
+      sourceRef:
+        kind: HelmRepository
+        name: halkeye
+        namespace: flux
+      interval: 1m
+  values:
+    ingress:
+      enabled: true
+      annotations:
+        traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
+      hosts:
+        - whoami.k8s.nickysemenza.com
+    replicaCount: 4
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 10m
+        memory: 50Mi
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: whoami-guest
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: whoami
+      version: "0.3.2"
+      sourceRef:
+        kind: HelmRepository
+        name: halkeye
+        namespace: flux
+      interval: 1m
+  values:
+    ingress:
+      enabled: true
+      hosts:
+        - who.test
+    replicaCount: 4
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 10m
+        memory: 50Mi

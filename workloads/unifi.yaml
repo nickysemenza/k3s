@@ -1,0 +1,45 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: unifi
+  namespace: home
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: unifi
+      version: "1.0.x"
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: flux
+      interval: 1m
+  values:
+    image:
+      tag: "6.0"
+    # UID: 1024
+    # GID: 1024
+    ingress:
+      enabled: true
+      annotations:
+        traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
+      hosts:
+        - unifi.k8s.nickysemenza.com
+    controllerService:
+      type: LoadBalancer
+    stunService:
+      type: LoadBalancer
+    guiService:
+      type: ClusterIP
+    discoveryService:
+      type: LoadBalancer
+    persistence:
+      # storageClass: "nfs-client-cantaloupe-ops"
+      storageClass: "local-path"
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 1500Mi
+      requests:
+        cpu: 20m
+        memory: 300Mi

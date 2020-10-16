@@ -1,19 +1,22 @@
-apiVersion: helm.fluxcd.io/v1
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: prom
   namespace: monitoring
 spec:
+  interval: 5m
   chart:
-    repository: https://prometheus-community.github.io/helm-charts
-    name: kube-prometheus-stack
-    version: 9.4.10
+    spec:
+      chart: kube-prometheus-stack
+      version: "9.4.x"
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus
+        namespace: flux
+      interval: 1m
   valuesFrom:
-    - secretKeyRef:
-        name: prom-operator-values
-        namespace: monitoring
-        key: values.yaml
-        optional: false
+    - kind: Secret
+      name: prom-operator-values
   values:
     alertmanager:
       ingress:
@@ -60,7 +63,7 @@ spec:
         GF_DATABASE_USER: "postgres"
         GF_DATABASE_SSL_MODE: disable
       nodeSelector:
-        location: cloud
+        location: home
       plugins:
         - natel-discrete-panel
       dashboardProviders:
@@ -148,7 +151,7 @@ spec:
         # https://quay.io/repository/coreos/prometheus-config-reloader?tag=v0.20.0&tab=tags
         tag: v0.39.0
       nodeSelector:
-        location: cloud
+        location: home
       image:
         repository: raspbernetes/prometheus-operator
     prometheus-node-exporter:
@@ -254,38 +257,22 @@ spec:
     kubeScheduler:
       enabled: false
 ---
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  name: karma
-  namespace: monitoring
-spec:
-  chart:
-    repository: https://kubernetes-charts.storage.googleapis.com
-    name: karma
-    version: 1.5.2
-  values:
-    ingress:
-      enabled: true
-      annotations:
-        traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
-      hosts:
-        - karma.k8s.nickysemenza.com
-    env:
-      - name: ALERTMANAGER_URI
-        value: http://monitoring-prom-prometheus-alertmanager.monitoring.svc.cluster.local:9093
----
-# note: set synology snmp v2 community string to `public`
-apiVersion: helm.fluxcd.io/v1
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: snmp
   namespace: monitoring
 spec:
+  interval: 5m
   chart:
-    repository: https://prometheus-community.github.io/helm-charts
-    name: prometheus-snmp-exporter
-    version: 0.0.6
+    spec:
+      chart: prometheus-snmp-exporter
+      version: "0.0.x"
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus
+        namespace: flux
+      interval: 1m
   values:
     ingress:
       enabled: true
@@ -293,20 +280,11 @@ spec:
         traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
       hosts:
         - snmp.k8s.nickysemenza.com
-    serviceMonitor:
-      enabled: true
-      params:
-        enabled: true
-        conf:
-          module:
-            - synology
-          target:
-            - 10.0.0.206
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: "snmp-synology-cantaloupe"
+  name: "snmp-synology"
   namespace: monitoring
 spec:
   endpoints:
@@ -319,17 +297,9 @@ spec:
       path: /snmp
       port: http
       scrapeTimeout: 10s
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: prometheus-snmp-exporter
----
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: "snmp-synology-files"
-  namespace: monitoring
-spec:
-  endpoints:
+      relabelings:
+      - sourceLabels: [__param_target]
+        targetLabel: instance      
     - honorLabels: true
       params:
         module:
@@ -339,6 +309,9 @@ spec:
       path: /snmp
       port: http
       scrapeTimeout: 10s
+      relabelings:
+      - sourceLabels: [__param_target]
+        targetLabel: instance          
   selector:
     matchLabels:
       app.kubernetes.io/name: prometheus-snmp-exporter

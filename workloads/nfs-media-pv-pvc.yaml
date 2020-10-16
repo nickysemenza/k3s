@@ -2,7 +2,7 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   namespace: media
-  name: mnt-nfs-media
+  name: mnt-nfs-media-cantaloupe
 spec:
   capacity:
     storage: 5Gi
@@ -15,24 +15,24 @@ spec:
     - nfsvers=3
   claimRef:
     namespace: media
-    name: nfs-media
+    name: nfs-media-cantaloupe
   nfs:
-    path: /mnt/main/media
-    server: freenas.lan.nickysemenza.com
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-                - strawberry
+    path: /volume1/media
+    server: cantaloupe.lan.nickysemenza.com
+  # nodeAffinity:
+  #   required:
+  #     nodeSelectorTerms:
+  #       - matchExpressions:
+  #           - key: kubernetes.io/hostname
+  #             operator: In
+  #             values:
+  #               - strawberry
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   namespace: media
-  name: nfs-media
+  name: nfs-media-cantaloupe
 spec:
   accessModes:
     - ReadWriteMany
@@ -41,4 +41,4 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: ""
-  volumeName: mnt-nfs-media
+  volumeName: mnt-nfs-media-cantaloupe
