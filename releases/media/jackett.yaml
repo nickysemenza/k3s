@@ -8,33 +8,33 @@ spec:
   chart:
     spec:
       chart: jackett
-      version: "4.0.x"
+      version: "5.7.x"
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
         namespace: flux
       interval: 1m
   values:
-    jackett:
-      env:
-        TZ: America/Los_Angeles
-      ingress:
+    env:
+      TZ: America/Los_Angeles
+    ingress:
+      enabled: true
+      annotations:
+        traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
+      hosts:
+        - host: jackett.k8s.nickysemenza.com
+          paths:
+            - path: /
+    persistence:
+      config:
         enabled: true
-        annotations:
-          traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
-        hosts:
-          - host: jackett.k8s.nickysemenza.com
-            paths: ["/"]
-      persistence:
-        config:
-          enabled: true
-          storageClass: "nfs-client-cantaloupe-ops"
-          accessMode: ReadWriteOnce
-          size: 1Gi
-          ## Do not delete the pvc upon helm uninstall
-          skipuninstall: false
-        media:
-          enabled: true
-          existingClaim: nfs-media-cantaloupe
-          ## Do not delete the pvc upon helm uninstall
-          skipuninstall: false
+        storageClass: "nfs-client-cantaloupe-ops"
+        accessMode: ReadWriteOnce
+        size: 1Gi
+        ## Do not delete the pvc upon helm uninstall
+        skipuninstall: false
+      # media:
+      #   enabled: true
+      #   existingClaim: nfs-media-cantaloupe
+      #   ## Do not delete the pvc upon helm uninstall
+      #   skipuninstall: false

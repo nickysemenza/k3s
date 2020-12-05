@@ -166,3 +166,35 @@ spec:
         traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
       hosts:
         - zigbee.k8s.nickysemenza.com
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: homebridge
+  namespace: home
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: homebridge
+      version: "1.x.x"
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: flux
+      interval: 1m
+  values:
+    config:
+      plugins: ["homebridge-tplink-smarthome"]
+    service:
+      httpPort: 6569
+    hostNetwork: true
+    ingress:
+      enabled: true
+      annotations:
+        traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
+      hosts:
+        - homebridge.k8s.nickysemenza.com
+    persistence:
+      enabled: true
+      storageClass: "nfs-client-cantaloupe-ops"  

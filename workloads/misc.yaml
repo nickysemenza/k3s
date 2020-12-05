@@ -59,3 +59,18 @@ spec:
       requests:
         cpu: 10m
         memory: 50Mi
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: whoami
+  namespace: default
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`w.nickysemenza.com`) || PathPrefix(`/whoami`)
+      kind: Rule
+      services:
+        - name: default-whoami-http@kubernetes
+          kind: TraefikService
