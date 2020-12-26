@@ -9,7 +9,7 @@ spec:
     spec:
       # renovate: registryUrl=https://prometheus-community.github.io/helm-charts
       chart: kube-prometheus-stack
-      version: 9.4.0
+      version: 12.8.1
       sourceRef:
         kind: HelmRepository
         name: prometheus
@@ -148,13 +148,13 @@ spec:
             gnetId: 7107
             datasource: Prometheus
     prometheusOperator:
-      prometheusConfigReloaderImage:
+      # prometheusConfigReloaderImage:
         # https://quay.io/repository/coreos/prometheus-config-reloader?tag=v0.20.0&tab=tags
-        tag: v0.39.0
-      nodeSelector:
-        location: home
-      image:
-        repository: raspbernetes/prometheus-operator
+        # tag: v0.39.0
+      # nodeSelector:
+      #   location: home
+      # image:
+      #   repository: raspbernetes/prometheus-operator
     prometheus-node-exporter:
       tolerations:
         - key: "arm"
@@ -317,3 +317,13 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: prometheus-snmp-exporter
+
+# reqs: 
+# https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack#upgrading-an-existing-release-to-a-new-major-version
+# kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/release-0.43/example/prometheus-operator-crd/monitoring.coreos.com_alertmanagers.yaml
+# kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/release-0.43/example/prometheus-operator-crd/monitoring.coreos.com_podmonitors.yaml
+# kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/release-0.43/example/prometheus-operator-crd/monitoring.coreos.com_probes.yaml
+# kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/release-0.43/example/prometheus-operator-crd/monitoring.coreos.com_prometheuses.yaml
+# kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/release-0.43/example/prometheus-operator-crd/monitoring.coreos.com_prometheusrules.yaml
+# kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/release-0.43/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml
+# kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/release-0.43/example/prometheus-operator-crd/monitoring.coreos.com_thanosrulers.yaml      
