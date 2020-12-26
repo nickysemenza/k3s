@@ -31,7 +31,7 @@ spec:
     spec:
       # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: home-assistant
-      version: 2.7.0
+      version: 5.2.1
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
@@ -43,38 +43,37 @@ spec:
       annotations:
         traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
       hosts:
-        - hass.k8s.nickysemenza.com
+        - host: hass.k8s.nickysemenza.com
+          paths:
+            - path: /
+              pathType: Prefix
 
     persistence:
-      enabled: true
-      storageClass: "nfs-client-cantaloupe-ops"
-
-    configurator:
-      enabled: true
-
-      ingress:
+      config:
         enabled: true
-        annotations:
-          traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
-        hosts:
-          - hass-config.k8s.nickysemenza.com
+        storageClass: "nfs-client-cantaloupe-ops"
+        accessMode: ReadWriteOnce
+        size: 4Gi
 
-    monitoring:
-      enabled: true
+    prometheus:
       serviceMonitor:
-        enabled: true
-        bearerTokenSecret:
-          name: hass-access-token
-          key: token
+        enabled: false
 
-    vscode:
-      enabled: true
-      ingress:
+    addons:
+      codeserver:
         enabled: true
-        annotations:
-          traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
-        hosts:
-          - hass-vscode.k8s.nickysemenza.com
+        volumeMounts:
+        - name: config
+          mountPath: /data/config      
+        ingress:
+          enabled: true
+          annotations:
+            traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
+          hosts:
+            - host: hass-config.k8s.nickysemenza.com
+              paths:
+                - path: /
+                  pathType: Prefix
 
     nodeSelector:
       location: home
