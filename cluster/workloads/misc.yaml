@@ -9,7 +9,7 @@ spec:
     spec:
       # renovate: registryUrl=https://halkeye.github.io/helm-charts
       chart: whoami
-      version: "0.3.2"
+      version: 0.3.2
       sourceRef:
         kind: HelmRepository
         name: halkeye
@@ -42,7 +42,7 @@ spec:
     spec:
       # renovate: registryUrl=https://halkeye.github.io/helm-charts
       chart: whoami
-      version: "0.3.2"
+      version: 0.3.2
       sourceRef:
         kind: HelmRepository
         name: halkeye
