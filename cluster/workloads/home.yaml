@@ -90,7 +90,7 @@ spec:
     spec:
       # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: node-red
-      version: 3.x.0
+      version: 5.2.1
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
@@ -104,10 +104,15 @@ spec:
       annotations:
         traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
       hosts:
-        - node-red.k8s.nickysemenza.com
+        - host: node-red.k8s.nickysemenza.com
+          paths:
+            - path: /
+              pathType: Prefix
     persistence:
-      enabled: true
-      storageClass: "nfs-client-cantaloupe-ops"
+      data:
+        enabled: true
+        accessMode: ReadWriteOnce
+        storageClass: "nfs-client-cantaloupe-ops"
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
@@ -120,15 +125,24 @@ spec:
     spec:
       # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: zigbee2mqtt
-      version: 2.1.0
+      version: 4.1.2
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
         namespace: flux
       interval: 1m
   values:
-    timezone: America/Los_Angeles
+    TZ: America/Los_Angeles
     config:
+
+      additionalVolumeMounts:
+        - name: usb
+          mountPath: /dev/serial/by-id/usb-Texas_Instruments_TI_CC2531_USB_CDC___0X00124B0014D90913-if00
+
+      additionalVolumes:
+        - name: usb
+          hostPath:
+            path: /dev/serial/by-id/usb-Texas_Instruments_TI_CC2531_USB_CDC___0X00124B0014D90913-if00
       # These will be applied ONLY on first run
       homeassistant: true
       permit_join: true
@@ -153,23 +167,26 @@ spec:
           friendly_name: "e250"
 
     persistence:
-      enabled: true
-      storageClass: "nfs-client-cantaloupe-ops"
-      size: 100Mi
+      data:
+        enabled: true
+        storageClass: "nfs-client-cantaloupe-ops"
+        size: 100Mi
+        accessMode: ReadWriteOnce
 
     nodeSelector:
       kubernetes.io/hostname: plum
     tolerations:
       - key: "arm"
         operator: "Exists"
-    # assistant:
-    #   enabled: true
     ingress:
       enabled: true
       annotations:
         traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
       hosts:
-        - zigbee.k8s.nickysemenza.com
+        - host: zigbee.k8s.nickysemenza.com
+          paths:
+            - path: /
+              pathType: Prefix
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
@@ -182,7 +199,7 @@ spec:
     spec:
       # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: homebridge
-      version: 1.x.0
+      version: 1.0.2
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
