@@ -1,14 +1,15 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: radarr
+  name: sonarr
   namespace: media
 spec:
   interval: 5m
   chart:
     spec:
-      chart: radarr
-      version: "8.2.x"
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
+      chart: sonarr
+      version: "8.1.x"
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
@@ -21,14 +22,14 @@ spec:
       annotations:
         traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
       hosts:
-        - host: radarr.k8s.nickysemenza.com
+        - host: sonarr.k8s.nickysemenza.com
           paths:
             - path: /
               pathType: Prefix
-        - host: movies.k8s.nickysemenza.com
+        - host: tv.k8s.nickysemenza.com
           paths:
             - path: /
-              pathType: Prefix                
+              pathType: Prefix          
     persistence:
       config:
         enabled: true

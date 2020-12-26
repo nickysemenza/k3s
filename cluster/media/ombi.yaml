@@ -1,13 +1,14 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: tautulli
+  name: ombi
   namespace: media
 spec:
   interval: 5m
   chart:
     spec:
-      chart: tautulli
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
+      chart: ombi
       version: "4.0.x"
       sourceRef:
         kind: HelmRepository
@@ -15,15 +16,14 @@ spec:
         namespace: flux
       interval: 1m
   values:
-    tautulli:
-      env:
-        TZ: America/Los_Angeles
+    ombi:
+      timezone: America/Los_Angeles
       ingress:
         enabled: true
         annotations:
           traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
         hosts:
-          - host: tautulli.k8s.nickysemenza.com
+          - host: ombi.k8s.nickysemenza.com
             paths:
               - path: /
                 pathType: Prefix
@@ -35,8 +35,5 @@ spec:
           size: 1Gi
           ## Do not delete the pvc upon helm uninstall
           skipuninstall: false
-        # media:
-        #   enabled: true
-        #   existingClaim: nfs-media-cantaloupe
-        #   ## Do not delete the pvc upon helm uninstall
-        #   skipuninstall: false
+      nodeSelector:
+        location: home

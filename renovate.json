@@ -1,5 +1,18 @@
 {
-  "extends": [
-    "config:base"
+  "enabled": true,
+  "timezone": "America/Los_Angeles",
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "Renovate Dashboard",
+  "helm-values": {
+    "fileMatch": ["cluster/.+\\.yaml$"]
+  },
+  "regexManagers": [
+    {
+      "fileMatch": ["cluster/.+\\.yaml$"],
+      "matchStrings": [
+        "registryUrl=(?<registryUrl>.*?)\n *chart: (?<depName>.*?)\n *version: (?<currentValue>.*)\n"
+      ],
+      "datasourceTemplate": "helm"
+    }
   ]
 }

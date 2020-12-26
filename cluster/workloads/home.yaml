@@ -7,6 +7,7 @@ spec:
   interval: 5m
   chart:
     spec:
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: mosquitto
       version: "0.3.x"
       sourceRef:
@@ -28,6 +29,7 @@ spec:
   interval: 5m
   chart:
     spec:
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: home-assistant
       version: "2.5.x"
       sourceRef:
@@ -86,6 +88,7 @@ spec:
   interval: 5m
   chart:
     spec:
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: node-red
       version: "3.x.x"
       sourceRef:
@@ -115,6 +118,7 @@ spec:
   interval: 5m
   chart:
     spec:
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: zigbee2mqtt
       version: "2.0.x"
       sourceRef:
@@ -176,6 +180,7 @@ spec:
   interval: 5m
   chart:
     spec:
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: homebridge
       version: "1.x.x"
       sourceRef:
