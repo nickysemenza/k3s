@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   validate-yamls:
     docker:
-      - image: stefanprodan/hrval:v3.4.0
+      - image: stefanprodan/hrval:v3.5.0
     steps:
       - checkout
       - run:

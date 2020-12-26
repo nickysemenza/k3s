@@ -8,5 +8,5 @@ services:
     volumes:
       - "./releases:/releases"
       - "./releasestmp:/tmp"
-    image: stefanprodan/hrval:v3.4.0
+    image: stefanprodan/hrval:v3.5.0
     command: "/releases $IGNORE_VALUES $KUBE_VER $HELM_VER"
