@@ -32,7 +32,7 @@ spec:
     spec:
       # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: unifi-poller
-      version: 2.0.0
+      version: 5.1.1
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
@@ -41,12 +41,6 @@ spec:
   values:
     image:
       tag: stable
-    config:
-      influxdb:
-        disable: true
-      unifi:
-        defaults:
-          save_dpi: true
   valuesFrom:
     - kind: Secret
       name: unifi-poller-creds
