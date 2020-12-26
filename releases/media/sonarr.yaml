@@ -34,13 +34,11 @@ spec:
       persistence:
         config:
           enabled: true
-          storageClass: "nfs-client-cantaloupe-ops"
+          storageClass: "local-path" # NFS and sqlite don't work well
           accessMode: ReadWriteOnce
           size: 1Gi
-          ## Do not delete the pvc upon helm uninstall
           skipuninstall: false
         media:
           enabled: true
           existingClaim: nfs-media-cantaloupe
-          ## Do not delete the pvc upon helm uninstall
           skipuninstall: false
