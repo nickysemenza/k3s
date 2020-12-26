@@ -8,37 +8,35 @@ spec:
   chart:
     spec:
       chart: sonarr
-      version: "6.0.x"
+      version: "8.1.x"
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
         namespace: flux
       interval: 1m
   values:
-    sonarr:
-      env:
-        TZ: America/Los_Angeles
-      ingress:
+    TZ: America/Los_Angeles
+    ingress:
+      enabled: true
+      annotations:
+        traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
+      hosts:
+        - host: sonarr.k8s.nickysemenza.com
+          paths:
+            - path: /
+              pathType: Prefix
+        - host: tv.k8s.nickysemenza.com
+          paths:
+            - path: /
+              pathType: Prefix          
+    persistence:
+      config:
         enabled: true
-        annotations:
-          traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
-        hosts:
-          - host: sonarr.k8s.nickysemenza.com
-            paths:
-              - path: /
-                pathType: Prefix
-          - host: tv.k8s.nickysemenza.com
-            paths:
-              - path: /
-                pathType: Prefix                
-      persistence:
-        config:
-          enabled: true
-          storageClass: "local-path" # NFS and sqlite don't work well
-          accessMode: ReadWriteOnce
-          size: 1Gi
-          skipuninstall: false
-        media:
-          enabled: true
-          existingClaim: nfs-media-cantaloupe
-          skipuninstall: false
+        storageClass: "local-path" # NFS and sqlite don't work well
+        accessMode: ReadWriteOnce
+        size: 1Gi
+        skipuninstall: false
+      media:
+        enabled: true
+        existingClaim: nfs-media-cantaloupe
+        skipuninstall: false
