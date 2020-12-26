@@ -9,7 +9,7 @@ spec:
     spec:
       # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: mosquitto
-      version: "0.3.x"
+      version: 0.3.0
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
@@ -31,7 +31,7 @@ spec:
     spec:
       # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: home-assistant
-      version: "2.5.x"
+      version: 2.5.0
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
@@ -90,7 +90,7 @@ spec:
     spec:
       # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: node-red
-      version: "3.x.x"
+      version: 3.x.0
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
@@ -120,7 +120,7 @@ spec:
     spec:
       # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: zigbee2mqtt
-      version: "2.0.x"
+      version: 2.0.0
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
@@ -182,7 +182,7 @@ spec:
     spec:
       # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: homebridge
-      version: "1.x.x"
+      version: 1.x.0
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home

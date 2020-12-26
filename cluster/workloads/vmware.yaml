@@ -9,7 +9,7 @@ spec:
     spec:
       # renovate: registryUrl=https://kremers.github.io/
       chart: vmware-exporter
-      version: "2.0.x"
+      version: 2.0.0
       sourceRef:
         kind: HelmRepository
         name: kremers
