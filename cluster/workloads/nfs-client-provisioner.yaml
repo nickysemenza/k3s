@@ -11,6 +11,7 @@ spec:
   interval: 5m
   chart:
     spec:
+      # renovate: registryUrl=https://kubernetes-charts.storage.googleapis.com/
       chart: nfs-client-provisioner
       version: "1.2.8"
       sourceRef:

@@ -7,6 +7,7 @@ spec:
   interval: 5m
   chart:
     spec:
+      # renovate: registryUrl=https://kremers.github.io/
       chart: vmware-exporter
       version: "2.0.x"
       sourceRef:
