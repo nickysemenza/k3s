@@ -1,11 +1,8 @@
-
-
 # install steps
 
 1. install tailscale on all nodes
 2. ensure passwordless sudo is enabled
 3. ensure passwordless ssh is enabled
-
 
 ```bash
 # master node (in cloud so it's universally reachable w/o DynDNS)
@@ -22,15 +19,13 @@ k3sup join --ip `dig plum.lan.nickysemenza.com +short` \
 k taint nodes apricot arm=true:NoExecute
 k taint nodes apricot arm=true:NoSchedule
 
-
-
 ```
 k3sup install --ip `dig plum.ts.nickysemenza.com +short` \
   --user nicky \
   --k3s-extra-args '--disable traefik --node-label location=home' --k3s-version 'v1.19.2+k3s1'
 ```
 
-
+```
 > k apply -f https://github.com/fluxcd/helm-controller/releases/download/v0.1.1/helm-controller.yaml
 namespace/helm-system created
 customresourcedefinition.apiextensions.k8s.io/buckets.source.toolkit.fluxcd.io created
@@ -47,10 +42,10 @@ clusterrolebinding.rbac.authorization.k8s.io/helm-reconciler-rolebinding created
 service/source-controller created
 deployment.apps/helm-controller created
 deployment.apps/source-controller created
-
-
+```
 
 ### inspiration
-* https://github.com/bjw-s/k8s-gitops
-* https://github.com/billimek/k8s-gitops
-* https://github.com/onedr0p/k3s-gitops
+
+- https://github.com/bjw-s/k8s-gitops
+- https://github.com/billimek/k8s-gitops
+- https://github.com/onedr0p/k3s-gitops

@@ -29,7 +29,7 @@ spec:
         - host: movies.k8s.nickysemenza.com
           paths:
             - path: /
-              pathType: Prefix                
+              pathType: Prefix
     persistence:
       config:
         enabled: true
