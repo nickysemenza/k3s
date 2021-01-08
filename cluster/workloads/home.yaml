@@ -40,14 +40,17 @@ spec:
   values:
     ingress:
       enabled: true
-      annotations:
-        traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
+      # annotations:
+        # traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
       hosts:
         - host: hass.k8s.nickysemenza.com
           paths:
             - path: /
               pathType: Prefix
-
+        - host: hass.nickysemenza.com
+          paths:
+            - path: /
+              pathType: Prefix
     persistence:
       config:
         enabled: true
@@ -57,7 +60,10 @@ spec:
 
     prometheus:
       serviceMonitor:
-        enabled: false
+        enabled: true
+        bearerTokenSecret: 
+          key: token
+          name: prometheus-hass
 
     addons:
       codeserver:
