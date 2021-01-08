@@ -41,7 +41,7 @@ spec:
     ingress:
       enabled: true
       # annotations:
-        # traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
+      # traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
       hosts:
         - host: hass.k8s.nickysemenza.com
           paths:
@@ -61,7 +61,7 @@ spec:
     prometheus:
       serviceMonitor:
         enabled: true
-        bearerTokenSecret: 
+        bearerTokenSecret:
           key: token
           name: prometheus-hass
 
@@ -118,6 +118,7 @@ spec:
         enabled: true
         accessMode: ReadWriteOnce
         storageClass: "nfs-client-cantaloupe-ops"
+        size: 1Gi
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease

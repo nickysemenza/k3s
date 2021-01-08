@@ -6,6 +6,12 @@
   "helm-values": {
     "fileMatch": ["cluster/.+\\.yaml$"]
   },
+  "packageRules": [
+    {
+      "updateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    }
+  ],
   "regexManagers": [
     {
       "fileMatch": ["cluster/.+\\.yaml$"],
