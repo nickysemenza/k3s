@@ -155,7 +155,7 @@ spec:
         base_topic: zigbee2mqtt
         server: "mqtt://mosquitto.home.svc.cluster.local"
       serial:
-        port: /dev/serial/by-id/usb-Texas_Instruments_TI_CC2531_USB_CDC___0X00124B0014D90913-if00
+        port: /dev/ttyACM0
       # Both of these need to be enabled for the webui
       frontend:
         port: 8080

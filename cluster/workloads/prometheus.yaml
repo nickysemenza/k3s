@@ -56,8 +56,8 @@ spec:
             name: grafana-db-credentials
             key: db-password
       env:
-        GF_TRACING_JAEGER_ADDRESS: "jaeger-tracing-agent.default.svc.cluster.local:6831"
-        GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource,jdbranham-diagram-panel,grafana-piechart-panel,natel-discrete-panel"
+        # GF_TRACING_JAEGER_ADDRESS: "jaeger-tracing-agent.default.svc.cluster.local:6831"
+        # GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource,jdbranham-diagram-panel,grafana-piechart-panel,natel-discrete-panel"
         GF_DATABASE_TYPE: postgres
         GF_DATABASE_NAME: "grafana-k8s"
         GF_DATABASE_HOST: "34.66.204.3"
@@ -326,6 +326,7 @@ spec:
     matchLabels:
       app.kubernetes.io/name: prometheus-snmp-exporter
 # reqs:
+# https://github.com/SumoLogic/sumologic-kubernetes-collection/pull/1310/files
 # https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack#upgrading-an-existing-release-to-a-new-major-version
 # kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/release-0.43/example/prometheus-operator-crd/monitoring.coreos.com_alertmanagers.yaml
 # kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/release-0.43/example/prometheus-operator-crd/monitoring.coreos.com_podmonitors.yaml
