@@ -1,0 +1,54 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: graylog
+  namespace: logs
+spec:
+  interval: 1m
+  chart:
+    spec:
+      # renovate: registryUrl=charts.kong-z.com
+      chart: graylog
+      version: 1.7.3
+      sourceRef:
+        kind: HelmRepository
+        name: kongz
+        namespace: flux
+      interval: 1m
+  values:
+    tags:
+      install-elasticsearch: false
+      install-mongodb: false
+    graylog:
+      image:
+        repository: "graylog/graylog:4.0"
+      ingress:
+        enabled: true
+        # annotations:
+        # traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
+        hosts: ["graylog"]
+      mongodb:
+        uri: mongodb://mongodb-headless.logs.svc.cluster.local:27017/graylog?replicaSet=rs0
+      elasticsearch:
+        hosts: http://elasticsearch-master.logs.svc.cluster.local:9200
+      # config: |
+      # elasticsearch_connect_timeout = 10s
+      # elasticsearch_socket_timeout = 60s
+      # http_external_uri = https://graylog.k8s.nickysemenza.com/
+      input:
+        tcp:
+          service:
+            type: LoadBalancer
+            externalTrafficPolicy: Local
+          ports:
+            - name: gelf1
+              port: 12222
+            - name: syslog
+              port: 5410
+        udp:
+          service:
+            type: LoadBalancer
+            externalTrafficPolicy: Local
+          ports:
+            - name: syslog
+              port: 5410

@@ -1,0 +1,82 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: elastic
+  namespace: logs
+spec:
+  interval: 1m
+  chart:
+    spec:
+      # renovate: registryUrl=https://helm.elastic.co/
+      chart: elasticsearch
+      version: 7.10.2
+      sourceRef:
+        kind: HelmRepository
+        name: elastic
+        namespace: flux
+      interval: 1m
+  values:
+    image: "docker.elastic.co/elasticsearch/elasticsearch-oss"
+    antiAffinity: "soft"
+
+    # Shrink default JVM heap.
+    esJavaOpts: "-Xmx128m -Xms128m"
+
+    # Allocate smaller chunks of memory per pod.
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "512M"
+      limits:
+        cpu: "1000m"
+        memory: "512M"
+
+    # Request smaller persistent volumes.
+    volumeClaimTemplate:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: "local-path"
+      resources:
+        requests:
+          storage: 100M
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  labels:
+    app: elasticsearch
+  name: elasticsearch-master-alt
+  namespace: logs
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: system-cf-access-auth@kubernetescrd
+spec:
+  rules:
+    - host: es.k8s.nickysemenza.com
+      http:
+        paths:
+          - backend:
+              serviceName: elasticsearch-master
+              servicePort: 9200
+            path: /
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: es-exporter
+  namespace: logs
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://prometheus-community.github.io/helm-charts
+      chart: prometheus-elasticsearch-exporter
+      version: 4.0.1
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus
+        namespace: flux
+      interval: 1m
+  values:
+    es:
+      uri: http://elasticsearch-master.logs.svc.cluster.local:9200
+    serviceMonitor:
+      enabled: true
