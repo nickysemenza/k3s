@@ -35,6 +35,7 @@ spec:
     discoveryService:
       type: LoadBalancer
     persistence:
+      enabled: true
       # storageClass: "nfs-client-cantaloupe-ops"
       storageClass: "local-path"
     resources:
