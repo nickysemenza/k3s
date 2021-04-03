@@ -106,3 +106,21 @@ metadata:
 spec:
   interval: 10m
   url: https://charts.kong-z.com
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: timberio
+  namespace: flux
+spec:
+  interval: 10m
+  url: https://packages.timber.io/helm/latest
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: timberio-nightly
+  namespace: flux
+spec:
+  interval: 10m
+  url: https://packages.timber.io/helm/nightly
