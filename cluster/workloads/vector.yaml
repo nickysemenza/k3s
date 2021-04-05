@@ -40,7 +40,7 @@ spec:
     spec:
       # renovate: registryUrl=https://packages.timber.io/helm/nightly
       chart: vector-aggregator
-      version: 0.13.0-nightly-2021-04-04
+      version: 0.13.0-nightly-2021-04-05
       sourceRef:
         kind: HelmRepository
         name: timberio-nightly
@@ -89,7 +89,7 @@ spec:
     spec:
       # renovate: registryUrl=https://packages.timber.io/helm/nightly
       chart: vector-aggregator
-      version: 0.13.0-nightly-2021-04-04
+      version: 0.13.0-nightly-2021-04-05
       sourceRef:
         kind: HelmRepository
         name: timberio-nightly
