@@ -352,6 +352,31 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: prometheus-snmp-exporter
+---
+# https://snmp.k8s.nickysemenza.com/snmp?target=10.0.0.33&module=ubiquiti_unifi#
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: "snmp-unifi"
+  namespace: monitoring
+spec:
+  endpoints:
+    - honorLabels: true
+      params:
+        module:
+          - ubiquiti_unifi
+        target:
+          - 10.0.0.33
+      path: /snmp
+      port: http
+      interval: 10s
+      scrapeTimeout: 10s
+      relabelings:
+        - sourceLabels: [__param_target]
+          targetLabel: instance
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus-snmp-exporter
 # reqs:
 # https://github.com/SumoLogic/sumologic-kubernetes-collection/pull/1310/files
 # https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack#upgrading-an-existing-release-to-a-new-major-version
